@@ -33,7 +33,7 @@ func (h *UserHandler) SetIsActive(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if req.UserID == "" {
-		writeDomainErr(w, domain.NewError(domain.ErrorNotFound, "user not found"))
+		writeDomainErr(w, domain.NewError(domain.ErrorNotFound, "resource not found"))
 		return
 	}
 

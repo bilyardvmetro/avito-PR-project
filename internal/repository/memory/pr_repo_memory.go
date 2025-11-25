@@ -22,7 +22,7 @@ func (r *PRRepoMemory) CreatePR(pr *domain.PullRequest) error {
 	defer r.mu.Unlock()
 
 	if _, ok := r.prs[pr.PullRequestID]; ok {
-		return domain.NewError(domain.ErrorPRExists, "PR already exists")
+		return domain.NewError(domain.ErrorPRExists, "PR id already exists")
 	}
 	copy := *pr
 	r.prs[pr.PullRequestID] = &copy
@@ -35,7 +35,7 @@ func (r *PRRepoMemory) GetPR(id string) (*domain.PullRequest, error) {
 
 	pr, ok := r.prs[id]
 	if !ok {
-		return nil, domain.NewError(domain.ErrorNotFound, "PR not found")
+		return nil, domain.NewError(domain.ErrorNotFound, "resource not found")
 	}
 	copy := *pr
 	return &copy, nil
@@ -46,9 +46,7 @@ func (r *PRRepoMemory) UpdatePR(pr *domain.PullRequest) error {
 	defer r.mu.Unlock()
 
 	if _, ok := r.prs[pr.PullRequestID]; !ok {
-		// можно либо возвращать ошибку, либо создать — но по логике сервиса
-		// Update вызывается только для уже существующих PR
-		return domain.NewError(domain.ErrorNotFound, "PR not found")
+		return domain.NewError(domain.ErrorNotFound, "resource not found")
 	}
 	copy := *pr
 	r.prs[pr.PullRequestID] = &copy

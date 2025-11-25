@@ -92,7 +92,7 @@ func (s *prService) ReassignReviewer(prID, oldUserID string) (*domain.PullReques
 	}
 
 	if pr.Status == domain.StatusMerged {
-		return nil, "", domain.NewError(domain.ErrorPRMerged, "PR merged")
+		return nil, "", domain.NewError(domain.ErrorPRMerged, "cannot reassign on merged PR")
 	}
 
 	idx := -1

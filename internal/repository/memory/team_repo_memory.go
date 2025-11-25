@@ -33,7 +33,7 @@ func (r *TeamRepoMemory) GetTeam(name string) (*domain.Team, error) {
 	defer r.mu.RUnlock()
 	t, ok := r.teams[name]
 	if !ok {
-		return nil, domain.NewError(domain.ErrorNotFound, "team not found")
+		return nil, domain.NewError(domain.ErrorNotFound, "resource not found")
 	}
 	return t, nil
 }

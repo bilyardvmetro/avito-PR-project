@@ -15,7 +15,7 @@ func NewTeamService(t domain.TeamRepository, u domain.UserRepository) domain.Tea
 
 func (s *teamService) AddTeam(team domain.Team) (*domain.Team, error) {
 	if _, err := s.teams.GetTeam(team.TeamName); err == nil {
-		return nil, domain.NewError(domain.ErrorTeamExists, "team already exists")
+		return nil, domain.NewError(domain.ErrorTeamExists, "team_name already exists")
 	}
 
 	for _, m := range team.Members {

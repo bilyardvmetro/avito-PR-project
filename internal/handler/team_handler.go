@@ -52,7 +52,7 @@ func (h *TeamHandler) GetTeam(w http.ResponseWriter, r *http.Request) {
 
 	teamName := r.URL.Query().Get("team_name")
 	if teamName == "" {
-		writeDomainErr(w, domain.NewError(domain.ErrorNotFound, "team not found"))
+		writeDomainErr(w, domain.NewError(domain.ErrorNotFound, "resource not found"))
 		return
 	}
 

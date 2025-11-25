@@ -31,7 +31,7 @@ func (r *UserRepoMemory) GetUser(id string) (*domain.User, error) {
 
 	u, ok := r.users[id]
 	if !ok {
-		return nil, domain.NewError(domain.ErrorNotFound, "user not found")
+		return nil, domain.NewError(domain.ErrorNotFound, "resource not found")
 	}
 	copy := *u
 	return &copy, nil
@@ -42,7 +42,7 @@ func (r *UserRepoMemory) UpdateUser(u *domain.User) error {
 	defer r.mu.Unlock()
 
 	if _, ok := r.users[u.UserID]; !ok {
-		return domain.NewError(domain.ErrorNotFound, "user not found")
+		return domain.NewError(domain.ErrorNotFound, "resource not found")
 	}
 	copy := *u
 	r.users[u.UserID] = &copy
