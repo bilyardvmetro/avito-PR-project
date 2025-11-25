@@ -108,7 +108,7 @@ linters:
     - funlen
     - unused
 
-version: 2
+version: "2"
 ```
 
 ## **Описание задачи**
