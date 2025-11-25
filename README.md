@@ -84,18 +84,12 @@ docker-compose run --rm k6
 
 ```
 
-## **Нагрузочное тестирование и его результаты**
+## **Конфигурация линтера**
 
-Конфигурация линтера:
+:
 ```yaml
 run:
   timeout: 3m
-  tests: true
-
-issues:
-  new: true
-  max-same-issues: 3
-  exclude-use-default: false
 
 linters:
   enable:
@@ -114,33 +108,7 @@ linters:
     - funlen
     - unused
 
-linters-settings:
-  gocyclo:
-    min-complexity: 15
-
-  gosec:
-    excludes:
-      - G115 # преобразование типов int
-
-  revive:
-    rules:
-      - name: exported
-        severity: warning
-        disabled: false
-        arguments:
-          - checkPrivateReceivers
-      - name: unused-parameter
-        severity: warning
-        disabled: true
-      - name: var-naming
-        severity: warning
-        disabled: false
-
-output:
-  formats:
-    - format: colored-line-number
-      path: ""
-
+version: 2
 ```
 
 ## **Описание задачи**
