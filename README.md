@@ -84,6 +84,65 @@ docker-compose run --rm k6
 
 ```
 
+## **Нагрузочное тестирование и его результаты**
+
+Конфигурация линтера:
+```yaml
+run:
+  timeout: 3m
+  tests: true
+
+issues:
+  new: true
+  max-same-issues: 3
+  exclude-use-default: false
+
+linters:
+  enable:
+    - govet # стандартный анализатор Go
+    - staticcheck # статический анализ
+    - gosimple # упрощение кода
+    - revive # стиль, потенциальные баги
+    - errcheck # проверка, что ошибки не игнорируются
+    - ineffassign  # неиспользуемые присваивания
+    - gofumpt # форматирование (над gofmt)
+    - goconst # вынос магических констант
+    - gosec #  базовая проверка на безопасность
+
+  disable:
+    - depguard
+    - funlen
+    - unused
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+
+  gosec:
+    excludes:
+      - G115 # преобразование типов int
+
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+        arguments:
+          - checkPrivateReceivers
+      - name: unused-parameter
+        severity: warning
+        disabled: true
+      - name: var-naming
+        severity: warning
+        disabled: false
+
+output:
+  formats:
+    - format: colored-line-number
+      path: ""
+
+```
+
 ## **Описание задачи**
 
 Внутри команды требуется единый микросервис, который автоматически назначает ревьюеров на Pull Request’ы (PR), а также

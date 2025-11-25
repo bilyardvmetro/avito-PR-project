@@ -9,15 +9,15 @@ issues:
 
 linters:
   enable:
-    - govet
-    - staticcheck
-    - gosimple
-    - revive
-    - errcheck
-    - ineffassign
-    - gofumpt
-    - goconst
-    - gosec
+    - govet # стандартный анализатор Go
+    - staticcheck # статический анализ
+    - gosimple # упрощение кода
+    - revive # стиль, потенциальные баги
+    - errcheck # проверка, что ошибки не игнорируются
+    - ineffassign  # неиспользуемые присваивания
+    - gofumpt # форматирование (над gofmt)
+    - goconst # вынос магических констант
+    - gosec #  базовая проверка на безопасность
 
   disable:
     - depguard
@@ -30,7 +30,7 @@ linters-settings:
 
   gosec:
     excludes:
-      - G115
+      - G115 # преобразование типов int
 
   revive:
     rules:
@@ -45,8 +45,3 @@ linters-settings:
       - name: var-naming
         severity: warning
         disabled: false
-
-output:
-  formats:
-    - format: colored-line-number
-      path: ""
