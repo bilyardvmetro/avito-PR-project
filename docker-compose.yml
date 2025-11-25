@@ -1,0 +1,7 @@
+version: "3.9"
+
+services:
+  pr-reviewer-service:
+    build: .
+    ports:
+      - "8080:8080"
