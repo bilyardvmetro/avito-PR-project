@@ -42,13 +42,10 @@ func (r *TeamRepoPostgres) GetTeam(name string) (*domain.Team, error) {
 		return nil, err
 	}
 
-	// Members здесь можем оставить пустым — TeamService при желании
-	// может дополнительно дотянуть юзеров из UserRepository.
 	t.Members = nil
 	return &t, nil
 }
 
 func (r *TeamRepoPostgres) UpdateTeam(team *domain.Team) error {
-	// пока ничего не делаем, по ТЗ апдейта команды нет
 	return nil
 }

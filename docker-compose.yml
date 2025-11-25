@@ -49,5 +49,17 @@ services:
       migrator:
         condition: service_completed_successfully
 
+
+  k6:
+    image: grafana/k6
+    depends_on:
+      pr-reviewer-service:
+        condition: service_started
+    environment:
+      BASE_URL: "http://pr-reviewer-service:8080"
+    volumes:
+      - ./loadtest:/scripts
+    command: [ "run", "/scripts/k6_pr_service.js" ]
+
 volumes:
   pgdata:
