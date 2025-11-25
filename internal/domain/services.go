@@ -15,3 +15,8 @@ type PRService interface {
 	MergePR(id string) (*PullRequest, error)
 	ReassignReviewer(prID, oldUserID string) (*PullRequest, string, error)
 }
+
+// статистика
+type StatsService interface {
+	GetAssignmentStats() (*AssignmentStats, error)
+}

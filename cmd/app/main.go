@@ -25,12 +25,14 @@ func main() {
 	teamSvc := service.NewTeamService(teamRepo, userRepo)
 	userSvc := service.NewUserService(userRepo, prRepo)
 	prSvc := service.NewPRService(prRepo, userRepo, teamRepo)
+	statsSvc := service.NewStatsService(prRepo)
 
 	teamH := handler.NewTeamHandler(teamSvc)
 	userH := handler.NewUserHandler(userSvc)
 	prH := handler.NewPRHandler(prSvc)
+	statsH := handler.NewStatsHandler(statsSvc)
 
-	srv := server.New(teamH, userH, prH)
+	srv := server.New(teamH, userH, prH, statsH)
 
 	log.Println("Server started on :8080")
 	if err := http.ListenAndServe(":8080", srv.Mux); err != nil {

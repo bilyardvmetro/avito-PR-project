@@ -14,6 +14,7 @@ func New(
 	teamHandler *handler.TeamHandler,
 	userHandler *handler.UserHandler,
 	prHandler *handler.PRHandler,
+	statsHandler *handler.StatsHandler,
 ) *Server {
 	mux := http.NewServeMux()
 
@@ -26,6 +27,9 @@ func New(
 	mux.HandleFunc("/pullRequest/create", prHandler.CreatePR)
 	mux.HandleFunc("/pullRequest/merge", prHandler.MergePR)
 	mux.HandleFunc("/pullRequest/reassign", prHandler.Reassign)
+
+	// эндпоинт статистики
+	mux.HandleFunc("/stats/assignments", statsHandler.GetAssignments)
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"status":"ok"}`))

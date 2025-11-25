@@ -138,3 +138,48 @@ func (r *PRRepoPostgres) GetPRsAssignedTo(userID string) ([]*domain.PullRequest,
 
 	return res, nil
 }
+
+// статистика
+func (r *PRRepoPostgres) GetAssignmentCountByUser() ([]domain.UserAssignmentStat, error) {
+	rows, err := r.db.Query(context.Background(),
+		`SELECT reviewer_id, COUNT(*) 
+         FROM pr_reviewers
+         GROUP BY reviewer_id`,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var res []domain.UserAssignmentStat
+	for rows.Next() {
+		var s domain.UserAssignmentStat
+		if err := rows.Scan(&s.UserID, &s.Assignments); err != nil {
+			return nil, err
+		}
+		res = append(res, s)
+	}
+	return res, nil
+}
+
+func (r *PRRepoPostgres) GetReviewerCountByPR() ([]domain.PRAssignmentStat, error) {
+	rows, err := r.db.Query(context.Background(),
+		`SELECT pull_request_id, COUNT(*) 
+         FROM pr_reviewers
+         GROUP BY pull_request_id`,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var res []domain.PRAssignmentStat
+	for rows.Next() {
+		var s domain.PRAssignmentStat
+		if err := rows.Scan(&s.PullRequestID, &s.Reviewers); err != nil {
+			return nil, err
+		}
+		res = append(res, s)
+	}
+	return res, nil
+}

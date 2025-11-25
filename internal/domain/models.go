@@ -41,3 +41,19 @@ type PullRequestShort struct {
 	AuthorID        string `json:"author_id"`
 	Status          string `json:"status"`
 }
+
+// статистика
+type UserAssignmentStat struct {
+	UserID      string `json:"user_id"`
+	Assignments int64  `json:"assignments"`
+}
+
+type PRAssignmentStat struct {
+	PullRequestID string `json:"pull_request_id"`
+	Reviewers     int64  `json:"reviewers"`
+}
+
+type AssignmentStats struct {
+	ByUser []UserAssignmentStat `json:"by_user"`
+	ByPR   []PRAssignmentStat   `json:"by_pr"`
+}
