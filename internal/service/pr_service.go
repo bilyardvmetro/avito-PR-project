@@ -41,15 +41,15 @@ func (s *prService) CreatePR(id, name, authorID string) (*domain.PullRequest, er
 		return nil, err
 	}
 
-	team, err := s.teams.GetTeam(author.TeamName)
+	users, err := s.users.GetUsersByTeam(author.TeamName)
 	if err != nil {
 		return nil, err
 	}
 
-	candidates := []string{}
-	for _, m := range team.Members {
-		if m.IsActive && m.UserID != authorID {
-			candidates = append(candidates, m.UserID)
+	var candidates []string
+	for _, u := range users {
+		if u.IsActive && u.UserID != authorID {
+			candidates = append(candidates, u.UserID)
 		}
 	}
 
@@ -111,34 +111,41 @@ func (s *prService) ReassignReviewer(prID, oldUserID string) (*domain.PullReques
 		return nil, "", err
 	}
 
-	team, err := s.teams.GetTeam(oldUser.TeamName)
+	users, err := s.users.GetUsersByTeam(oldUser.TeamName)
 	if err != nil {
 		return nil, "", err
 	}
 
 	var candidates []string
-	for _, m := range team.Members {
-		if !m.IsActive || m.UserID == oldUserID || m.UserID == pr.AuthorID {
+	for _, u := range users {
+		if !u.IsActive || u.UserID == oldUserID || u.UserID == pr.AuthorID {
 			continue
 		}
+
 		already := false
-		for _, a := range pr.Assigned {
-			if a == m.UserID {
+		for _, rid := range pr.Assigned {
+			if rid == u.UserID {
 				already = true
+				break
 			}
 		}
-		if !already {
-			candidates = append(candidates, m.UserID)
+		if already {
+			continue
 		}
+
+		candidates = append(candidates, u.UserID)
 	}
 
 	if len(candidates) == 0 {
 		return nil, "", domain.NewError(domain.ErrorNoCandidate, "no candidate")
 	}
 
-	newR := chooseRandom(candidates, 1)[0]
-	pr.Assigned[idx] = newR
-	s.prs.UpdatePR(pr)
+	newReviewer := chooseRandom(candidates, 1)[0]
+	pr.Assigned[idx] = newReviewer
 
-	return pr, newR, nil
+	if err := s.prs.UpdatePR(pr); err != nil {
+		return nil, "", err
+	}
+
+	return pr, newReviewer, nil
 }
