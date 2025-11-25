@@ -8,9 +8,40 @@
 docker-compose up --build -d db migrator pr-reviewer-service
 ```
 
+## **Эндпоинт статистики**
+
+При обращении на `http://localhost:8080/stats/assignments` статистика по количеству ревью у юзеров и количество ревью на PR'ах выводится в следующем формате:
+
+```json lines
+{
+  "by_user": [
+    {
+      "user_id": "u9",
+      "assignments": 1
+    },
+    {
+      "user_id": "u57",
+      "assignments": 1
+    },
+		...
+		],
+  "by_pr": [
+    {
+      "pull_request_id": "pr-26",
+      "reviewers": 2
+    },
+    {
+      "pull_request_id": "pr-11",
+      "reviewers": 2
+    },
+		...
+	]
+}
+```
+
 ## **Нагрузочное тестирование и его результаты**
 
-### Подготовка и запуск наргузочных тестов
+### Подготовка и запуск нагрузочных тестов
 
 - Запустить сервис:
 

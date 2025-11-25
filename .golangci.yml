@@ -1,0 +1,52 @@
+run:
+  timeout: 3m
+  tests: true
+
+issues:
+  new: true
+  max-same-issues: 3
+  exclude-use-default: false
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - gosimple
+    - revive
+    - errcheck
+    - ineffassign
+    - gofumpt
+    - goconst
+    - gosec
+
+  disable:
+    - depguard
+    - funlen
+    - unused
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+
+  gosec:
+    excludes:
+      - G115
+
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+        arguments:
+          - checkPrivateReceivers
+      - name: unused-parameter
+        severity: warning
+        disabled: true
+      - name: var-naming
+        severity: warning
+        disabled: false
+
+output:
+  formats:
+    - format: colored-line-number
+      path: ""
