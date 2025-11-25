@@ -1,6 +1,53 @@
 services:
+  db:
+    image: postgres:16
+    container_name: avito-pr-postgres
+    environment:
+      POSTGRES_USER: avito
+      POSTGRES_PASSWORD: avito
+      POSTGRES_DB: pr_service
+    ports:
+      - "5555:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U avito -d pr_service" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+    restart: unless-stopped
+
+  migrator:
+    image: migrate/migrate
+    container_name: avito-pr-migrator
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/migrations
+    # migrate up и выход
+    command:
+      [
+        "-path", "/migrations",
+        "-database", "postgres://avito:avito@db:5432/pr_service?sslmode=disable",
+        "up"
+      ]
+    restart: "no"
+
   pr-reviewer-service:
     build: .
     container_name: avito-pr-service
     ports:
       - "8080:8080"
+    environment:
+      DB_DSN: "postgres://avito:avito@db:5432/pr_service?sslmode=disable"
+    depends_on:
+      db:
+        condition: service_started
+      migrator:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata:
